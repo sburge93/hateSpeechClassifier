@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Subscription} from 'rxjs';
+import {HateSpeechApiService} from './api.service/HateSpeechApiService';
+import {HateSpeechModel} from 'src/models/HateSpeechModel';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +10,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Dissertation-Project';
+
 }
