@@ -5,8 +5,9 @@ from flask import Flask, jsonify, request
 from sqlalchemy import desc
 
 from .baseEntity import Session, engine, Base
-#from entities.exam import Exam, ExamSchema
 from .hateSpeech import HateSpeechModel, HateSpeechSchema
+from .twitterStream import streamTweets
+
 
 # creating the Flask application
 app = Flask(__name__)
@@ -56,6 +57,9 @@ def add_hatespeech():
     else:
         return jsonify("hello"), 201
 
+def RunApi():
+    app.run(port='5002')
+    streamTweets()
 
-if __name__ == '__main__':
-     app.run(port='5002')
+if __name__=='__main__':
+    RunApi()
