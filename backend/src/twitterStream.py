@@ -80,7 +80,7 @@ def get_stream(headers, bearer_token):
 
 
 def main():
-    bearer_token = os.environ.get('AAAAAAAAAAAAAAAAAAAAAJf8PAEAAAAAzQONMQ38F7cu82gxvWPJA%2BBot18%3DdxtRyyaMczSOesv0PLWG3gAXz99gs6bVL4oLUB5cJB3LpEHB4o')
+    bearer_token = 'AAAAAAAAAAAAAAAAAAAAAJf8PAEAAAAAzQONMQ38F7cu82gxvWPJA%2BBot18%3DdxtRyyaMczSOesv0PLWG3gAXz99gs6bVL4oLUB5cJB3LpEHB4o'
     headers = create_headers(bearer_token)
     rules = get_rules(headers, bearer_token)
     delete_all_rules(headers, bearer_token, rules)
