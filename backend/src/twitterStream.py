@@ -2,7 +2,7 @@ import requests
 import os
 import json
 
-# To set enviornment variables in terminal run the following line:
+# To set your enviornment variables in your terminal run the following line:
 # export 'BEARER_TOKEN'='<your_bearer_token>'
 
 
@@ -43,7 +43,7 @@ def delete_all_rules(headers, bearer_token, rules):
     print(json.dumps(response.json()))
 
 
-def set_rules(headers, delete, bearer_token):
+def set_rules(headers, bearer_token):
     # You can adjust the rules if needed
     sample_rules = [
         {"value": "dog has:images", "tag": "dog pictures"},
@@ -62,7 +62,7 @@ def set_rules(headers, delete, bearer_token):
     print(json.dumps(response.json()))
 
 
-def get_stream(headers, set, bearer_token):
+def get_stream(headers, bearer_token):
     response = requests.get(
         "https://api.twitter.com/2/tweets/search/stream", headers=headers, stream=True,
     )
@@ -79,11 +79,14 @@ def get_stream(headers, set, bearer_token):
             print(json.dumps(json_response, indent=4, sort_keys=True))
 
 
-def streamTweets():
-    bearer_token = os.environ.get("BEARER_TOKEN")
-    print(bearer_token)
+def main():
+    bearer_token = os.environ.get('AAAAAAAAAAAAAAAAAAAAAJf8PAEAAAAAzQONMQ38F7cu82gxvWPJA%2BBot18%3DdxtRyyaMczSOesv0PLWG3gAXz99gs6bVL4oLUB5cJB3LpEHB4o')
     headers = create_headers(bearer_token)
-    get_stream(headers, set, bearer_token)
+    rules = get_rules(headers, bearer_token)
+    delete_all_rules(headers, bearer_token, rules)
+    set_rules(headers, bearer_token)
+    get_stream(headers, bearer_token)
 
-if __name__=='__main__':
-    streamTweets()
+
+if __name__ == "__main__":
+    main()
