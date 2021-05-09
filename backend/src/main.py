@@ -6,7 +6,6 @@ from sqlalchemy import desc
 
 from .baseEntity import Session, engine, Base
 from .hateSpeech import HateSpeechModel, HateSpeechSchema
-from .twitterStream import streamTweets
 
 
 # creating the Flask application
