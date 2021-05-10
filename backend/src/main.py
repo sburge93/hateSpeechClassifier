@@ -3,9 +3,11 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask import Flask, jsonify, request
 from sqlalchemy import desc
-
 from .baseEntity import Session, engine, Base
 from .hateSpeech import HateSpeechModel, HateSpeechSchema
+from .tweets import TweetModel, TweetSchema
+from .twitterStream import streamTweets
+import threading
 
 
 # creating the Flask application
@@ -15,21 +17,21 @@ CORS(app)
 # if needed, generate database schema
 Base.metadata.create_all(engine)
 
-@app.route('/hatespeech')
-def get_hatespeech():
+@app.route('/tweets')
+def get_tweets():
     # result = {'numberOfHateSpeechTweetsInLast2Minutes' : '23'}
     # return result
     # fetching from the database
     session = Session()
-    hateSpeech_objects = session.query(HateSpeechModel).order_by(desc(HateSpeechModel.created_at)).first()
+    TweetModel_objects = session.query(TweetModel).order_by(desc(TweetModel.created_at)).first()
 
     # transforming into JSON-serializable objects
-    schema = HateSpeechSchema(many=False)
-    hatespeech = schema.dump(hateSpeech_objects)
+    schema = TweetSchema(many=False)
+    tweets = schema.dump(TweetModel_objects)
 
     # serializing as JSON
     session.close()
-    return jsonify(hatespeech)
+    return jsonify(tweets)
 
 
 @app.route('/hatespeech', methods=['POST'])
@@ -59,6 +61,10 @@ def add_hatespeech():
 def RunApi():
     app.run(port='5002')
     streamTweets()
+    # thread = threading.Thread(target=streamTweets(), args=())
+    # thread.daemon = True
+    # # Daemonize thread
+    # thread.start()
 
 if __name__=='__main__':
     RunApi()

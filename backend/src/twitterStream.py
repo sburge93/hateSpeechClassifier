@@ -1,9 +1,14 @@
 import requests
 import os
 import json
+import pickle
+from .tweets import TweetModel, TweetSchema
+from .baseEntity import Session, engine, Base
+from datetime import datetime
 
-# To set your enviornment variables in your terminal run the following line:
-# export 'BEARER_TOKEN'='<your_bearer_token>'
+document_path = os.getcwd()+'/backend/src/random_forest_model.sav'
+document = open(document_path, 'rb')
+classifier = pickle.load(document)
 
 
 def create_headers(bearer_token):
@@ -76,10 +81,27 @@ def get_stream(headers, bearer_token):
     for response_line in response.iter_lines():
         if response_line:
             json_response = json.loads(response_line)
-            print(json.dumps(json_response, indent=4, sort_keys=True))
+            # print(json.dumps(json_response, indent=4, sort_keys=True))
 
 
-def main():
+            result = classifier.predict([json_response.text])
+            print('the result is')
+            print(result)
+
+            if result[0] > 1:
+                SaveTweet(json_response.text, json_response.created_at)
+
+
+def SaveTweet(tweet, tweetDate):
+    tweets = TweetModel(tweet, tweetDate, "Created by request")
+    print(tweets.tweet)
+    session = Session()
+    session.add(tweets)
+    session.commit()
+    session.close()
+
+def streamTweets():
+    print('in streamTweets')
     bearer_token = 'AAAAAAAAAAAAAAAAAAAAAJf8PAEAAAAAzQONMQ38F7cu82gxvWPJA%2BBot18%3DdxtRyyaMczSOesv0PLWG3gAXz99gs6bVL4oLUB5cJB3LpEHB4o'
     headers = create_headers(bearer_token)
     rules = get_rules(headers, bearer_token)
@@ -88,5 +110,6 @@ def main():
     get_stream(headers, bearer_token)
 
 
+
 if __name__ == "__main__":
-    main()
+    streamTweets()
