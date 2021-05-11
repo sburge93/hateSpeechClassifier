@@ -5,6 +5,7 @@ import pickle
 from .tweets import TweetModel, TweetSchema
 from .baseEntity import Session, engine, Base
 from datetime import datetime
+from dateutil import parser
 
 document_path = os.getcwd()+'/backend/src/random_forest_model.sav'
 document = open(document_path, 'rb')
@@ -69,27 +70,33 @@ def set_rules(headers, bearer_token):
 
 def get_stream(headers, bearer_token):
     response = requests.get(
-        "https://api.twitter.com/2/tweets/search/stream", headers=headers, stream=True,
+        "https://api.twitter.com/2/tweets/search/stream?tweet.fields=text,created_at", headers=headers, stream=True,
     )
-    print(response.status_code)
+   
     if response.status_code != 200:
         raise Exception(
             "Cannot get stream (HTTP {}): {}".format(
                 response.status_code, response.text
             )
         )
+
     for response_line in response.iter_lines():
         if response_line:
             json_response = json.loads(response_line)
-            # print(json.dumps(json_response, indent=4, sort_keys=True))
+            #print(json.dumps(json_response, indent=4, sort_keys=True))
 
+            tweet = json_response['data']['text']
+            print('tweet text is ' + tweet)
 
-            result = classifier.predict([json_response.text])
+            createdAt = parser.parse(json_response['data']['created_at'])
+            print(createdAt)
+
+            result = classifier.predict([tweet])
             print('the result is')
             print(result)
 
-            if result[0] > 1:
-                SaveTweet(json_response.text, json_response.created_at)
+            if result[0] == 0:
+                SaveTweet(tweet, createdAt)
 
 
 def SaveTweet(tweet, tweetDate):

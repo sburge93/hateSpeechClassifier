@@ -7,7 +7,7 @@ from .baseEntity import Session, engine, Base
 from .hateSpeech import HateSpeechModel, HateSpeechSchema
 from .tweets import TweetModel, TweetSchema
 from .twitterStream import streamTweets
-import threading
+from threading import Thread
 
 
 # creating the Flask application
@@ -19,20 +19,16 @@ Base.metadata.create_all(engine)
 
 @app.route('/tweets')
 def get_tweets():
-    # result = {'numberOfHateSpeechTweetsInLast2Minutes' : '23'}
-    # return result
-    # fetching from the database
     session = Session()
-    TweetModel_objects = session.query(TweetModel).order_by(desc(TweetModel.created_at)).first()
+    TweetModel_objects = session.query(TweetModel).order_by(desc(TweetModel.created_at)).limit(15).all()
 
     # transforming into JSON-serializable objects
-    schema = TweetSchema(many=False)
+    schema = TweetSchema(many=True)
     tweets = schema.dump(TweetModel_objects)
 
     # serializing as JSON
     session.close()
     return jsonify(tweets)
-
 
 @app.route('/hatespeech', methods=['POST'])
 def add_hatespeech():
@@ -58,13 +54,13 @@ def add_hatespeech():
     else:
         return jsonify("hello"), 201
 
-def RunApi():
-    app.run(port='5002')
-    streamTweets()
-    # thread = threading.Thread(target=streamTweets(), args=())
-    # thread.daemon = True
-    # # Daemonize thread
-    # thread.start()
+@app.route("/startStream")
+def index():
+    thread = Thread(target=streamTweets, args=())
+    thread.daemon = True
+    thread.start()
+    return jsonify({'thread_name': str(thread.name),
+                    'started': True})
 
 if __name__=='__main__':
-    RunApi()
+    app.run(port='5002')
