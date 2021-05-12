@@ -2,7 +2,7 @@ from flask_cors import CORS
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask import Flask, jsonify, request
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from .baseEntity import Session, engine, Base
 from .hateSpeech import HateSpeechModel, HateSpeechSchema
 from .tweets import TweetModel, TweetSchema
@@ -32,29 +32,6 @@ def get_tweets():
     session.close()
     return jsonify(tweets)
 
-@app.route('/hatespeech', methods=['POST'])
-def add_hatespeech():
-    
-    try:
-        data = request.get_json()
-        print(data)
-        numberOfHateSpeechTweetsIn2Minutes = data.get('numberOfHateSpeechTweetsInLast2Minutes', '')
-        print(numberOfHateSpeechTweetsIn2Minutes)
-        hatespeech = HateSpeechModel(numberOfHateSpeechTweetsIn2Minutes, "Created by request")
-        print(hatespeech.numberOfHateSpeechTweetsInLast2Minutes)
-        # persist hatespeech
-        session = Session()
-        session.add(hatespeech)
-        session.commit()
-
-        # return created exam
-        # new_hatespeech = HateSpeechSchema().dump(hatespeech).data
-        session.close()
-    except Exception as e:
-        print(e)
-        return str(e), 500
-    else:
-        return jsonify("hello"), 201
 
 @app.route("/startStream")
 def index():
@@ -65,7 +42,7 @@ def index():
                     'started': True})
 
 if __name__=='__main__':
-    app.run(port='5002')
+    app.run(port='5000')
 
 @app.route('/tweets/perinterval')
 def get_tweets_per_minute():
@@ -75,10 +52,10 @@ def get_tweets_per_minute():
 
     #get count of tweets for each minute in a given time frame
     rows = session \
-            .query(func.strftime("%M",TweetModel.created_at), func.count(TweetModel.id)) \
+            .query(func.to_char(TweetModel.created_at, 'MI'), func.count(TweetModel.id)) \
             .where(TweetModel.created_at > searchDate) \
-            .group_by(func.strftime("%M",TweetModel.created_at)) \
-            .order_by(func.strftime("%M",TweetModel.created_at)) \
+            .group_by(func.to_char(TweetModel.created_at, 'MI')) \
+            .order_by(func.to_char(TweetModel.created_at, 'MI')) \
             .all()
 
     session.close()

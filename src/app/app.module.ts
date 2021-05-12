@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
+import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
 import {HateSpeechApiService} from './api.service/HateSpeechApiService';
@@ -25,6 +26,7 @@ import { FullpageDirective } from './shared/directives/fullpage.directive';
   ],
   imports: [
     BrowserModule,
+    ChartsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
