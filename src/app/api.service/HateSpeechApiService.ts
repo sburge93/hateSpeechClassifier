@@ -3,7 +3,7 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {API_URL} from 'src/app/envs';
-import {HateSpeechModel} from 'src/models/HateSpeechModel';
+import { TweetModel } from 'src/models/TweetModel';
 
 @Injectable()
 export class HateSpeechApiService {
@@ -15,9 +15,9 @@ export class HateSpeechApiService {
   }
 
   // GET list of public, future events
-  getHateSpeech(): Observable<HateSpeechModel> {
+  getHateSpeech(): Observable<TweetModel[]> {
     return this.http
-      .get<HateSpeechModel>(`${API_URL}/hatespeech`)
+      .get<TweetModel[]>(`${API_URL}/tweets/perinterval`)
       .pipe(catchError(HateSpeechApiService._handleError));
    }
 }

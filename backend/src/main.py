@@ -8,6 +8,8 @@ from .hateSpeech import HateSpeechModel, HateSpeechSchema
 from .tweets import TweetModel, TweetSchema
 from .twitterStream import streamTweets
 from threading import Thread
+from datetime import datetime, timedelta
+from collections import OrderedDict
 
 
 # creating the Flask application
@@ -64,3 +66,29 @@ def index():
 
 if __name__=='__main__':
     app.run(port='5002')
+
+@app.route('/tweets/perinterval')
+def get_tweets_per_minute():
+    session = Session()
+
+    searchDate = datetime.now() + timedelta(days=-2)
+
+    #get count of tweets for each minute in a given time frame
+    rows = session \
+            .query(func.strftime("%M",TweetModel.created_at), func.count(TweetModel.id)) \
+            .where(TweetModel.created_at > searchDate) \
+            .group_by(func.strftime("%M",TweetModel.created_at)) \
+            .order_by(func.strftime("%M",TweetModel.created_at)) \
+            .all()
+
+    session.close()
+
+    #read rows into array list to turn into json
+    object_list = []
+    for row in rows:
+        d = OrderedDict()
+        d['minute'] = row[0]
+        d['count'] = row[1]
+        object_list.append(d)
+
+    return jsonify(object_list)

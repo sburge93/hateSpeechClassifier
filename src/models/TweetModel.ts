@@ -1,6 +1,6 @@
 export interface TweetModel {
-    tweet : string;
-    tweetDate : Date;
+    count : number;
+    minute : string;
 }
 
 export class TweetModel {}

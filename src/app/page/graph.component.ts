@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
 import {HateSpeechApiService} from '../api.service/HateSpeechApiService';
-import { HateSpeechModel } from "src/models/HateSpeechModel";
 import { MatCardModule } from '@angular/material/card';
 import {Subscription} from 'rxjs';
+import { TweetModel } from 'src/models/TweetModel';
 
 
 @Component({
@@ -12,7 +12,7 @@ import {Subscription} from 'rxjs';
 })
 export class GraphComponent implements OnInit, OnDestroy {
   hateSpeechModelSubs: Subscription;
-  hateSpeechModel: HateSpeechModel;
+  hateSpeechModel: TweetModel[];
 
   constructor(private hatespeechApi: HateSpeechApiService) {
   }
