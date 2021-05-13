@@ -15,18 +15,18 @@ export class GraphComponent implements OnInit, OnDestroy {
   hateSpeechModelSubs: Subscription;
   hateSpeechModel: TweetModel[];
   // public chartLabels: Label [] = [];
-  public chartData: number [] = [];
+  // public chartData: number [] = [];
   public loaded: Boolean;
 
   constructor(private hatespeechApi: HateSpeechApiService) {
   }
-  // chartData = [
-  //   {
-  //     data: [330, 600, 260, 700],
-  //     label: 'Account A'
-  //   }
+  chartData = [
+    {
+      data: [330, 600, 260, 700],
+      label: 'Account A'
+    }
   
-  // ];
+  ];
 
   chartLabels = [
     'January',
@@ -52,7 +52,7 @@ ngOnInit() {
         console.log(res)
           this.hateSpeechModel = res;
           // this.chartLabels = this.hateSpeechModel.map (item => item.minute);
-          this.chartData = this.hateSpeechModel.map(item => item.count);
+          // this.chartData = this.hateSpeechModel.map(item => item.count);
           console.log(this.hateSpeechModel)
           // console.log(this.chartData)
           // console.log(this.chartLabels)
