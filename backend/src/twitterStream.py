@@ -52,7 +52,7 @@ def delete_all_rules(headers, bearer_token, rules):
 def set_rules(headers, bearer_token):
     # You can adjust the rules if needed
     sample_rules = [
-        {"value": "dog has:images", "tag": "dog pictures"},
+         {"value": "dog has:images", "tag": "dog pictures"},
         {"value": "cat has:images -grumpy", "tag": "cat pictures"},
     ]
     payload = {"add": sample_rules}
@@ -95,7 +95,7 @@ def get_stream(headers, bearer_token):
             print('the result is')
             print(result)
 
-            if result[0] == 0:
+            if result[0] == 2:
                 SaveTweet(tweet, createdAt)
 
 

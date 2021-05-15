@@ -48,7 +48,7 @@ if __name__=='__main__':
 def get_tweets_per_minute():
     session = Session()
 
-    searchDate = datetime.now() + timedelta(days=-2)
+    searchDate = datetime.now() + timedelta(hours=-1)
 
     #get count of tweets for each minute in a given time frame
     rows = session \

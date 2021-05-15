@@ -34,9 +34,9 @@ export class GraphComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    setTimeout(() => {
+    setInterval(() => {
       this.getData();
-    }, 5000);
+    }, 20000);
   }
 
   getData() {
@@ -46,14 +46,14 @@ export class GraphComponent implements OnInit, OnDestroy {
       console.log(res)
       this.hateSpeechModel = res;
       this.chartLabels = this.hateSpeechModel.map(item => item.minute);
-      this.chartData = [{ data: this.hateSpeechModel.map(item => item.count), label: 'Tweets' }];
+      this.chartData = [{ data: this.hateSpeechModel.map(item => item.count), label: 'Hatespeech Tweets' }];
       console.log(this.hateSpeechModel)
       this.loaded = true
     },
       console.error);
 }
 
-ngOnDestroy() {
-  this.hateSpeechModelSubs.unsubscribe();
-}
+  ngOnDestroy() {
+    this.hateSpeechModelSubs.unsubscribe();
+  }
 }
