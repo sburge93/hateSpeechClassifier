@@ -25,8 +25,8 @@ export class GraphComponent implements OnInit, OnDestroy {
 
   lineChartColors: Color[] = [
     {
-      borderColor: 'black',
-      backgroundColor: 'rgba(255,255,0,0.28)',
+      borderColor: 'orange',
+      backgroundColor: 'rgba(255,140,0,0.48)',
     },
   ];
   chartOptions = {
